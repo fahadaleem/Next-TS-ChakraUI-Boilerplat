@@ -41,7 +41,7 @@ export const StudentDetailsModal = ({
       <Modal isOpen={true} onClose={onClose} size="xl">
         <ModalOverlay />
         <ModalContent my="auto" maxWidth="700px">
-          <ModalHeader>Student Details</ModalHeader>
+          <ModalHeader>Teachers Details</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
             <SimpleGrid columns={2} columnGap={[0, 4]}>
@@ -109,7 +109,7 @@ export const StudentDetailsModal = ({
               <GridItem colSpan={[2, 1]}>
                 <Text fontWeight="bold">Available Slots:</Text>
                 <GridItem colSpan={2} ml={2}>
-                  {userDetails.availableSlots.map((item: any, key) => {
+                  {userDetails.availableSlots.map((item: any, key: any) => {
                     return (
                       <Box key={key} my={2}>
                         <Text fontWeight="bold" textTransform="capitalize">

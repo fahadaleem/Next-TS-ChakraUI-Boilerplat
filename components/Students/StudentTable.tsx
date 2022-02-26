@@ -55,9 +55,9 @@ const Students = () => {
   //     }
   //   };
 
-  //   useEffect(() => {
-  //     getAllStudents().then((resp) => setData(resp));
-  //   }, []);
+  useEffect(() => {
+    getAllStudents().then((resp) => setData(resp));
+  }, []);
 
   //   const handleNext = () => {
   //     setPagination({
@@ -128,7 +128,7 @@ const Students = () => {
                       <IconButton
                         onClick={async () => {
                           await deleteStudent(item.email);
-                          getAllStudents();
+                          getAllStudents().then((resp) => setData(resp));
                         }}
                         aria-label="Delete Student"
                         icon={<BsFillTrashFill />}
