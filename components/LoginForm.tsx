@@ -17,11 +17,13 @@ import {
 } from "@chakra-ui/react";
 import { FaUserAlt, FaLock } from "react-icons/fa";
 import AlertBox from "./Alert";
+import { useRouter } from "next/router";
 
 const CFaUserAlt = chakra(FaUserAlt);
 const CFaLock = chakra(FaLock);
 
 const LoginForm = () => {
+  const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState({
     status: false,
@@ -46,6 +48,7 @@ const LoginForm = () => {
 
     // API Integration here.
     console.log(loginCredentials);
+    router.push("/admin");
   };
 
   useEffect(() => {
@@ -71,7 +74,7 @@ const LoginForm = () => {
         alignItems="center"
       >
         <Avatar bg="teal.500" />
-        <Heading color="teal.400">Welcome</Heading>
+        <Heading color="teal.400">Welcome Admin</Heading>
         <Box minW={{ base: "90%", md: "468px" }}>
           <form onSubmit={onSubmit}>
             <Stack
@@ -81,6 +84,8 @@ const LoginForm = () => {
               boxShadow="md"
               flexDirection="column"
               justifyContent="center"
+              padding={8}
+              borderRadius={5}
             >
               {error.status && <AlertBox description={error.message} />}
               <FormControl>
