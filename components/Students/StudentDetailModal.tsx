@@ -53,7 +53,7 @@ export const StudentDetailsModal = ({
               <GridItem colSpan={[2, 1]}>
                 <HStack my={2} width="100%">
                   <Text fontWeight="bold">Email:</Text>
-                  <Text>{userDetails.email}</Text>
+                  <Text wordBreak="break-word">{userDetails.email}</Text>
                 </HStack>
               </GridItem>
               <GridItem colSpan={[2, 1]}>

@@ -6,6 +6,7 @@ export const useStore = create(
     (set, get) => ({
       user: true,
       addUser: (user: any) => set({ user: user }),
+      logout: () => set({ user: null }),
     }),
     {
       name: "qari-admin", // unique name

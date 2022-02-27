@@ -22,9 +22,12 @@ import {
   ChevronDownIcon,
   ChevronRightIcon,
 } from "@chakra-ui/icons";
+import { useStore } from "../../store";
 
 export default function AdminNavbar() {
   const { isOpen, onToggle } = useDisclosure();
+  const user = useStore((state) => state.user);
+  const logout = useStore((state) => state.logout);
 
   return (
     <Box
@@ -73,6 +76,27 @@ export default function AdminNavbar() {
                 <DesktopNav />
               </Flex>
             </Flex>
+            <Stack
+              flex={{ base: 1, md: 0 }}
+              justify={"flex-end"}
+              direction={"row"}
+              spacing={6}
+            >
+              <Button
+                display={{ base: "none", md: "inline-flex" }}
+                fontSize={"sm"}
+                fontWeight={600}
+                color={"white"}
+                bg={"brand.primary"}
+                // href={"#"}
+                _hover={{
+                  bg: "pink.300",
+                }}
+                onClick={logout}
+              >
+                {user ? "Log out" : "Login"}
+              </Button>
+            </Stack>
           </Flex>
 
           <Collapse in={isOpen} animateOpacity>

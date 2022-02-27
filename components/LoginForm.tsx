@@ -18,6 +18,7 @@ import {
 import { FaUserAlt, FaLock } from "react-icons/fa";
 import AlertBox from "./Alert";
 import { useRouter } from "next/router";
+import { useStore } from "../store";
 
 const CFaUserAlt = chakra(FaUserAlt);
 const CFaLock = chakra(FaLock);
@@ -35,6 +36,7 @@ const LoginForm = () => {
   });
 
   const handleShowClick = () => setShowPassword(!showPassword);
+  const addUser = useStore((state) => state.addUser);
 
   const onSubmit = (e: any) => {
     e.preventDefault();
@@ -48,6 +50,10 @@ const LoginForm = () => {
 
     // API Integration here.
     console.log(loginCredentials);
+    addUser({
+      username: "Fahad",
+      email: "faleem396@gmail.com",
+    });
     router.push("/admin");
   };
 
