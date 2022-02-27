@@ -15,6 +15,7 @@ import {
   Heading,
   HStack,
   Tooltip,
+  Stack,
 } from "@chakra-ui/react";
 import { BsFillTrashFill, BsFillArrowLeftSquareFill } from "react-icons/bs";
 import { FaArrowLeft, FaArrowRight, FaEye } from "react-icons/fa";
@@ -24,6 +25,25 @@ import { getAllTeachers, deleteTeacher } from "../../functions/Teacher";
 // import { SearchFilter } from "./searchFilter";
 import { StudentDetailsModal } from "./TeacherDetailModal";
 import { getAllStudents } from "../../functions/Students";
+
+interface ITeacherDetails {
+  isHired: boolean;
+  rating: number;
+  reviews: any[];
+  numberOfStudents: number;
+  age: number;
+  city: string;
+  country: string;
+  email: string;
+  gender: string;
+  jwt: string;
+  recitation: string;
+  name: string;
+  availableSlots: any[];
+  courses: any[];
+  intro: string;
+  roomLink: string;
+}
 
 const TeachersTable = () => {
   //   const auth: any = useStore((state) => state.auth);
@@ -41,7 +61,7 @@ const TeachersTable = () => {
 
   const [isOpen, setIsOpen] = useState(false);
 
-  const [userDetails, setUserDetails] = useState({});
+  const [userDetails, setUserDetails] = useState<ITeacherDetails | any>({});
 
   const [id, setId] = useState(null);
 
@@ -70,7 +90,10 @@ const TeachersTable = () => {
         <StudentDetailsModal
           isOpen={isOpen}
           onClose={() => setIsOpen(false)}
-          userDetails={userDetails}
+          userEmail={userDetails?.email}
+          getDetailsFunction={() =>
+            getAllTeachers().then((resp) => setData(resp))
+          }
         />
       )}
       <Heading>All Qari'es</Heading>
@@ -94,7 +117,20 @@ const TeachersTable = () => {
             {data?.length! > 0 &&
               data?.map((item: any) => (
                 <Tr key={item.id}>
-                  <Td>{item.name}</Td>
+                  <Td position="relative">
+                    <Tooltip label={item.isHired ? "Hired" : "Not Hired"}>
+                      <Box
+                        position="absolute"
+                        height="8px"
+                        width="8px"
+                        bg={item.isHired ? "green.400" : "red"}
+                        left="2"
+                        top="8"
+                        borderRadius="50%"
+                      />
+                    </Tooltip>
+                    {item.name}
+                  </Td>
                   <Td>{item.email}</Td>
                   <Td>{item.city}</Td>
                   <Td>{item.gender}</Td>
