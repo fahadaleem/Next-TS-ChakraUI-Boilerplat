@@ -1,5 +1,1 @@
-const Courses = () => {
-  return <h1>Hello world</h1>;
-};
-
-export default Courses;
+export * from "./AddNewCourse";
