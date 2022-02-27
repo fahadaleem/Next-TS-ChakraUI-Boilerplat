@@ -10,8 +10,17 @@ import {
   SimpleGrid,
   GridItem,
   Button,
+  Image,
 } from "@chakra-ui/react";
 import { useState } from "react";
+import { handleAddNewCourse } from "../../functions/Courses";
+import {
+  ref,
+  uploadBytes,
+  storage,
+  getDownloadURL,
+} from "../../firebase-config";
+import Swal from "sweetalert2";
 
 interface IBook {
   name: string;
@@ -20,14 +29,14 @@ interface IBook {
 }
 
 interface ICourseDetails {
-  courseName: string;
+  name: string;
   description: string;
   books: IBook[];
 }
 
 export const AddNewCourseComponent = () => {
   const [courseDetails, setCourseDetails] = useState<ICourseDetails>({
-    courseName: "",
+    name: "",
     description: "",
     books: [],
   });
@@ -45,20 +54,96 @@ export const AddNewCourseComponent = () => {
     setCourseDetails(formValues);
   };
 
+  const handleUploadBook = (index: number, file: any) => {
+    const storageRef = ref(
+      storage,
+      `/${courseDetails.name}/books/${file.name}`
+    );
+
+    uploadBytes(storageRef, file).then(async (snapshot) => {
+      console.log(snapshot);
+
+      const downloadUrl = await getDownloadURL(
+        ref(storage, `/${courseDetails.name}/books/${file.name}`)
+      );
+
+      let formValues = { ...courseDetails };
+      formValues.books[index].link = downloadUrl;
+      setCourseDetails(formValues);
+    });
+  };
+  const handleUploadThumbnail = (index: number, file: any) => {
+    const storageRef = ref(
+      storage,
+      `/${courseDetails.name}/books/thumbnail/${file.name}`
+    );
+
+    uploadBytes(storageRef, file).then(async (snapshot) => {
+      console.log(snapshot);
+
+      const downloadUrl = await getDownloadURL(
+        ref(storage, `/${courseDetails.name}/books/thumbnail/${file.name}`)
+      );
+
+      let formValues = { ...courseDetails };
+      formValues.books[index].thumbnail = downloadUrl;
+      setCourseDetails(formValues);
+    });
+  };
+
+  const onSubmit = async (e: any) => {
+    e.preventDefault();
+
+    const booksWithoutName = courseDetails.books.filter(
+      (item) => item.name === ""
+    );
+
+    if (booksWithoutName.length > 0) {
+      Swal.fire({
+        icon: "error",
+        title: "Error",
+        text: "Please Enter Book Title",
+      });
+      return;
+    }
+
+    const response = await handleAddNewCourse(courseDetails);
+    console.log(response);
+    if (response === 201) {
+      Swal.fire({
+        title: "Success",
+        text: "New Course Added Successfully!",
+        icon: "success",
+      }).then((resp) => {
+        setCourseDetails({
+          name: "",
+          description: "",
+          books: [],
+        });
+      });
+    } else if (response === 400) {
+      Swal.fire({
+        title: "Error",
+        text: "This Course is already!",
+        icon: "error",
+      });
+    }
+  };
+
   return (
     <Box>
       <Container maxWidth="container.lg">
         <Heading textAlign="center">Add a new course</Heading>
-        <form>
+        <form onSubmit={onSubmit}>
           <FormControl my={4}>
             <FormLabel>Course Name:</FormLabel>
             <Input
               type="text"
-              value={courseDetails.courseName}
+              value={courseDetails.name}
               onChange={(e) =>
                 setCourseDetails({
                   ...courseDetails,
-                  courseName: e.target.value,
+                  name: e.target.value,
                 })
               }
             />
@@ -92,13 +177,20 @@ export const AddNewCourseComponent = () => {
                     />
                   </FormControl>
                 </GridItem>
-                <GridItem colSpan={1}>
+                <GridItem colSpan={[2, 1]}>
                   <FormControl my="3">
                     <FormLabel>Upload Book:</FormLabel>
-                    <input type="file" accept=".pdf" required />
+                    <input
+                      type="file"
+                      accept=".pdf"
+                      required
+                      onChange={(e: any) => {
+                        handleUploadBook(key, e?.target.files[0]);
+                      }}
+                    />
                   </FormControl>
                 </GridItem>
-                <GridItem colSpan={1}>
+                <GridItem colSpan={[2, 1]}>
                   <FormControl my="3">
                     <FormLabel>Upload Thumbnail:</FormLabel>
                     <Box
@@ -122,8 +214,19 @@ export const AddNewCourseComponent = () => {
                         width="100%"
                         height="100%"
                         accept="image/png, image/jpeg, image/jpg"
+                        onChange={(e: any) => {
+                          handleUploadThumbnail(key, e?.target?.files[0]);
+                        }}
                       />
                     </Box>
+                    {courseDetails.books[key].thumbnail && (
+                      <Image
+                        src={courseDetails.books[key].thumbnail}
+                        boxSize="350px"
+                        objectFit="cover"
+                        mx="auto"
+                      />
+                    )}
                   </FormControl>
                 </GridItem>
               </SimpleGrid>
@@ -133,7 +236,18 @@ export const AddNewCourseComponent = () => {
             Click to Add Books
           </Text>
           <FormControl my={4}>
-            <Button w="100%" bg="brand.primary" color="#fff" fontSize="lg">
+            <Button
+              w="100%"
+              bg="brand.primary"
+              color="#fff"
+              fontSize="lg"
+              type="submit"
+              disabled={
+                !courseDetails.name ||
+                !courseDetails.description ||
+                !courseDetails.books.length
+              }
+            >
               Submit
             </Button>
           </FormControl>
