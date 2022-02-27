@@ -165,13 +165,13 @@ const DesktopSubNav = ({ label, href, subLabel }: NavItem) => {
       display={"block"}
       p={2}
       rounded={"md"}
-      _hover={{ bg: useColorModeValue("pink.50", "gray.900") }}
+      _hover={{ bg: "brand.primary", color: "#fff" }}
     >
       <Stack direction={"row"} align={"center"}>
         <Box>
           <Text
             transition={"all .3s ease"}
-            _groupHover={{ color: "pink.400" }}
+            _groupHover={{ color: "#fff" }}
             fontWeight={500}
           >
             {label}
@@ -187,7 +187,7 @@ const DesktopSubNav = ({ label, href, subLabel }: NavItem) => {
           align={"center"}
           flex={1}
         >
-          <Icon color={"pink.400"} w={5} h={5} as={ChevronRightIcon} />
+          <Icon color={"brand.secondary"} w={5} h={5} as={ChevronRightIcon} />
         </Flex>
       </Stack>
     </Link>
@@ -276,6 +276,19 @@ const NAV_ITEMS: Array<NavItem> = [
   {
     label: "Teachers",
     href: "/admin/teachers",
+  },
+  {
+    label: "Courses",
+    children: [
+      {
+        label: "All Courses",
+        href: "/admin/courses/allcourses",
+      },
+      {
+        label: "Add New Course",
+        href: "/admin/courses/addnewcourse",
+      },
+    ],
   },
   // {
   //   label: "Learn Design",

@@ -14,7 +14,7 @@ export const getAllTeachers = async () => {
 
     return students.data;
   } catch (error: any) {
-    alert(error.response.data.message);
+    alert(error.message);
   }
 };
 
@@ -31,6 +31,6 @@ export const deleteTeacher = async (teacherEmail: string) => {
 
     return students.data;
   } catch (error: any) {
-    alert(error.response.data.message);
+    alert(error.message);
   }
 };
