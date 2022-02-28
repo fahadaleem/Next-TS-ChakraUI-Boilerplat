@@ -19,6 +19,8 @@ import { FaUserAlt, FaLock } from "react-icons/fa";
 import AlertBox from "./Alert";
 import { useRouter } from "next/router";
 import { useStore } from "../store";
+import axois from "axios";
+import axios from "axios";
 
 const CFaUserAlt = chakra(FaUserAlt);
 const CFaLock = chakra(FaLock);
@@ -46,15 +48,26 @@ const LoginForm = () => {
         status: true,
         message: "Please fill out the required fields.",
       });
+      return;
     }
+
+    axios
+      .post("http://46.137.61.4:5000/auth/login/admin", loginCredentials)
+      .then((resp) => {
+        addUser(resp.data);
+        router.push("/admin");
+      })
+      .catch((error) => {
+        alert(error.response.data.message);
+      });
 
     // API Integration here.
     console.log(loginCredentials);
-    addUser({
-      username: "Fahad",
-      email: "faleem396@gmail.com",
-    });
-    router.push("/admin");
+
+    // addUser({
+    //   username: "Fahad",
+    //   email: "faleem396@gmail.com",
+    // });
   };
 
   useEffect(() => {
